@@ -13,6 +13,7 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true }, (err, client
   const characters = db.collection('characters')
 
   app.get('/characters', (req, res) => {
+    console.log('Fetching characters')
     characters.distinct("name")
     .then((body) => {
       res.send(body)

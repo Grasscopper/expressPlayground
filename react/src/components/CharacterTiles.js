@@ -1,8 +1,11 @@
 import React from "react"
+import { Link } from "react-router-dom"
 
 const CharacterTiles = (props) => {
   return (
-    <p>{props.name}</p>
+    <li>
+    <Link to={`/characters/${props.id}`}>{props.name}</Link>
+    </li>
   )
 }
 

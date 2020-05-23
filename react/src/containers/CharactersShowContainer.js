@@ -22,7 +22,7 @@ const CharactersShowContainer = (props) => {
       setChar(body[0].name)
     })
   }, [])
-  
+
   return (
     <div>
       <h1>Character Show Page</h1>

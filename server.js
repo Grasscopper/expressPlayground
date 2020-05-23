@@ -35,11 +35,19 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true }, (err, client
 
   app.post('/characters', (req, res) => {
     const newChar = req.body.name
-    characters.insertOne( {name: newChar} )
+    const origin = req.body.origin
+    const description = req.body.description
+    characters.insertOne( {
+      name: newChar,
+      origin: origin,
+      description: description
+    } )
     .then((result) => {
       res.json({
         _id: result.insertedId,
-        name: newChar
+        name: newChar,
+        origin: origin,
+        description: description
       })
     })
   })

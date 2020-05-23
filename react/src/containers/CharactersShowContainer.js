@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react"
 
 const CharactersShowContainer = (props) => {
-  let [char, setChar] = useState(null)
+  let [char, setChar] = useState({
+    name: "",
+    origin: "",
+    description: ""
+  })
   let charID = props.match.params.id
 
   useEffect(() => {
@@ -19,14 +23,20 @@ const CharactersShowContainer = (props) => {
       return response.json()
     })
     .then((body) => {
-      setChar(body[0].name)
+      setChar({
+        name: body[0].name,
+        origin: body[0].origin,
+        description: body[0].description
+      })
     })
   }, [])
 
   return (
     <div>
       <h1>Character Show Page</h1>
-      <h2>{char}</h2>
+      <h2>{char.name}</h2>
+      <p>Origin: {char.origin}</p>
+      <p>Description: {char.description}</p>
     </div>
   )
 }

@@ -1,7 +1,7 @@
 const MongoClient = require('mongodb').MongoClient
 const express = require('express')
-const app = express();
-const port = 5000;
+const app = express()
+const port = 5000
 
 require('dotenv').config()
 const connectionString = process.env.REACT_APP_KEY
@@ -14,7 +14,7 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true }, (err, client
   console.log('Connected to Database')
   const db = client.db('character-creation')
   const characters = db.collection('characters')
-  const locations = db.collection('locations')
+  // const locations = db.collection('locations')
 
   app.use(bodyParser.json())
   app.use(bodyParser.urlencoded( {extended: true} ))
@@ -37,11 +37,11 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true }, (err, client
     const newChar = req.body.name
     const origin = req.body.origin
     const description = req.body.description
-    characters.insertOne( {
+    characters.insertOne({
       name: newChar,
       origin: origin,
       description: description
-    } )
+    })
     .then((result) => {
       res.json({
         _id: result.insertedId,
@@ -49,6 +49,16 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true }, (err, client
         origin: origin,
         description: description
       })
+    })
+  })
+
+  app.delete('/characters/:id', (req, res) => {
+    characters.deleteOne({ "_id": ObjectID(req.params.id) })
+    .then(() => {
+      return characters.find({}).toArray()
+    })
+    .then((chars) => {
+      res.json(chars)
     })
   })
 

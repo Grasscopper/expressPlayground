@@ -27,7 +27,7 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true }, (err, client
   })
 
   app.get('/characters/:id', (req, res) => {
-    characters.find({ "_id": ObjectID(req.params.id) }).toArray()
+    characters.find({ _id: ObjectID(req.params.id) }).toArray()
     .then((body) => {
       res.json(body)
     })
@@ -53,12 +53,26 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true }, (err, client
   })
 
   app.delete('/characters/:id', (req, res) => {
-    characters.deleteOne({ "_id": ObjectID(req.params.id) })
+    characters.deleteOne({ _id: ObjectID(req.params.id) })
     .then(() => {
       return characters.find({}).toArray()
     })
-    .then((chars) => {
-      res.json(chars)
+    .then((body) => {
+      res.json(body)
+    })
+  })
+
+  app.put('/characters/:id', (req, res) => {
+    characters.updateOne(
+    { _id: ObjectID(req.params.id) },
+    {
+      $set: { name: req.body.name, origin: req.body.origin, description: req.body.description }
+    })
+    .then(() => {
+      return characters.find({}).toArray()
+    })
+    .then((body) => {
+      res.json(body)
     })
   })
 

@@ -94,6 +94,33 @@ const CharactersIndexContainer = (props) => {
     })
   }
 
+  const editChar = (charID, char) => {
+    fetch(`/characters/${charID}`, {
+      credentials: 'same-origin',
+      method: 'PUT',
+      body: JSON.stringify(char),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+    .then((response) => {
+      if (response.ok) {
+        return response
+      } else {
+        let errorMessage = `${response.status}: ${response.statusText}`
+        let error = new Error(errorMessage)
+        throw(error)
+      }
+    })
+    .then((response) => {
+      return response.json()
+    })
+    .then((chars) => {
+      setChars(chars)
+    })
+  }
+
   let charTiles = chars.map((char) => {
     return (
       <CharacterTiles
@@ -101,6 +128,7 @@ const CharactersIndexContainer = (props) => {
       id={char._id}
       name={char.name}
       deleteChar={deleteChar}
+      editChar={editChar}
       />
     )
   })

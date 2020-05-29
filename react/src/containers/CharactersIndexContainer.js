@@ -6,7 +6,7 @@ import CharactersNewForm from "../components/CharactersNewForm"
 const CharactersIndexContainer = (props) => {
   let [chars, setChars] = useState([])
 
-  useEffect(() => {
+  const getChars = () => {
     fetch('/characters')
     .then((response) => {
       if (response.ok) {
@@ -26,6 +26,10 @@ const CharactersIndexContainer = (props) => {
     .catch((error) => {
       console.error(`Error fetching characters: ${error.message}`)
     })
+  }
+
+  useEffect(() => {
+    getChars()
   }, [])
 
   const postNewChar = (formPayload) => {
@@ -61,12 +65,42 @@ const CharactersIndexContainer = (props) => {
     })
   }
 
+  const deleteChar = (charID) => {
+    fetch(`/characters/${charID}`, {
+      credentials: 'same-origin',
+      method: "DELETE",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      }
+    })
+    .then((response) => {
+      if (response.ok) {
+        return response
+      } else {
+        let errorMessage = `${response.status}: ${response.statusText}`
+        let error = new Error(errorMessage)
+        throw(error)
+      }
+    })
+    .then((response) => {
+      return response.json()
+    })
+    .then((chars) => {
+      setChars(chars)
+    })
+    .catch((error) => {
+      console.error(`Error deleting character: ${error.message}`)
+    })
+  }
+
   let charTiles = chars.map((char) => {
     return (
       <CharacterTiles
       key={char._id}
       id={char._id}
       name={char.name}
+      deleteChar={deleteChar}
       />
     )
   })
